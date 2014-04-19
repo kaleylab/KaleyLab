@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaleyLab.Data.Sample", "Kal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaleyLab.Data.SampleConsole", "KaleyLab.Data.SampleConsole\KaleyLab.Data.SampleConsole.csproj", "{AC48EE7F-15A0-433A-A073-7429A0B28B1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaleyLab.Data.SampleTest", "KaleyLab.Data.SampleTest\KaleyLab.Data.SampleTest.csproj", "{9B432392-F27B-4893-864F-336A9F8388A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{AC48EE7F-15A0-433A-A073-7429A0B28B1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC48EE7F-15A0-433A-A073-7429A0B28B1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC48EE7F-15A0-433A-A073-7429A0B28B1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B432392-F27B-4893-864F-336A9F8388A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B432392-F27B-4893-864F-336A9F8388A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B432392-F27B-4893-864F-336A9F8388A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B432392-F27B-4893-864F-336A9F8388A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,5 +57,6 @@ Global
 		{EAFC6F50-F744-4117-B619-361E72618C80} = {A7549C4C-3818-42B3-B351-AFB1D1C4D38E}
 		{576BEF02-4D28-4BBE-B771-30C3DB664BE2} = {A7549C4C-3818-42B3-B351-AFB1D1C4D38E}
 		{AC48EE7F-15A0-433A-A073-7429A0B28B1D} = {A7549C4C-3818-42B3-B351-AFB1D1C4D38E}
+		{9B432392-F27B-4893-864F-336A9F8388A8} = {A7549C4C-3818-42B3-B351-AFB1D1C4D38E}
 	EndGlobalSection
 EndGlobal

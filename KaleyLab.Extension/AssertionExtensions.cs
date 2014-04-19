@@ -16,7 +16,7 @@ namespace KaleyLab.Extension
         /// </summary>
         /// <param name="instance">Object instance</param>
         /// <returns>True or false</returns>
-        public static bool Null(this object instance)
+        public static bool IsNull(this object instance)
         {
             return instance == null;
         }
@@ -26,7 +26,7 @@ namespace KaleyLab.Extension
         /// </summary>
         /// <param name="instance">Object instance</param>
         /// <returns>True or false</returns>
-        public static bool NotNull(this object instance)
+        public static bool IsNotNull(this object instance)
         {
             return instance != null;
         }
@@ -37,7 +37,7 @@ namespace KaleyLab.Extension
         /// <typeparam name="T">Collection instance type</typeparam>
         /// <param name="enumerable">Enumerable instance</param>
         /// <returns>True or false</returns>
-        public static bool NullOrEmpty<T>(this IEnumerable<T> enumerable)
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
         {
             return enumerable == null || !enumerable.Any();
         }
@@ -48,7 +48,7 @@ namespace KaleyLab.Extension
         /// <typeparam name="T">Collection instance type</typeparam>
         /// <param name="enumerable">Enumerable instance</param>
         /// <returns>True or false</returns>
-        public static bool NotNullOrEmpty<T>(this IEnumerable<T> enumerable)
+        public static bool IsNotNullOrEmpty<T>(this IEnumerable<T> enumerable)
         {
             return enumerable != null && enumerable.Any();
         }
@@ -58,7 +58,7 @@ namespace KaleyLab.Extension
         /// </summary>
         /// <param name="guid">Guid instance</param>
         /// <returns>True or false</returns>
-        public static bool Empty(this Guid guid)
+        public static bool IsEmpty(this Guid guid)
         {
             return guid == Guid.Empty;
         }
@@ -68,7 +68,7 @@ namespace KaleyLab.Extension
         /// </summary>
         /// <param name="guid">Guid instance</param>
         /// <returns>True or false</returns>
-        public static bool NotEmpty(this Guid guid)
+        public static bool IsNotEmpty(this Guid guid)
         {
             return guid != Guid.Empty;
         }
@@ -76,21 +76,21 @@ namespace KaleyLab.Extension
         /// <summary>
         /// Indicates whether a string is null or empty.
         /// </summary>
-        /// <param name="s">String instance</param>
+        /// <param name="str">String instance</param>
         /// <returns>True or false</returns>
-        public static bool NullOrEmpty(this string s)
+        public static bool IsNullOrEmpty(this string str)
         {
-            return string.IsNullOrEmpty(s);
+            return string.IsNullOrEmpty(str);
         }
 
         /// <summary>
         /// Indicates whether a string is not null or empty.
         /// </summary>
-        /// <param name="s">String instance</param>
+        /// <param name="str">String instance</param>
         /// <returns>True or false</returns>
-        public static bool NotNullOrEmpty(this string s)
+        public static bool IsNotNullOrEmpty(this string str)
         {
-            return !string.IsNullOrEmpty(s);
+            return !string.IsNullOrEmpty(str);
         }
 
         /// <summary>
@@ -98,12 +98,19 @@ namespace KaleyLab.Extension
         /// </summary>
         /// <param name="instance">Object instance</param>
         /// <param name="exception">Instance of spcified exception </param>
-        public static void NullThrowEx(this object instance, Exception exception)
+        public static void ThrowsExIfNull(this object instance, Exception exception)
         {
-            if (instance == null)
-            {
-                throw exception;
-            }
+            if (instance.IsNull()) { throw exception; }
+        }
+
+        /// <summary>
+        /// Asserts an object if null throws <see cref="System.ArgumentNullException">System.ArgumentNullException</see> with argument name.
+        /// </summary>
+        /// <param name="instance">Object instance</param>
+        /// <param name="name"></param>
+        public static void ThrowsArgumentNullExIfNull(this object instance,string name)
+        {
+            if (instance.IsNull()) { throw new ArgumentNullException(name); }
         }
 
         /// <summary>
@@ -111,12 +118,9 @@ namespace KaleyLab.Extension
         /// </summary>
         /// <param name="instance">Object instance</param>
         /// <param name="message">Argument exception message</param>
-        public static void NullThrowArgumentEx(this object instance,string message)
+        public static void ThrowsArgumentExIfNull(this object instance,string message)
         {
-            if (instance == null)
-            {
-                throw new ArgumentException(message);
-            }
+            if (instance.IsNull()) { throw new ArgumentException(message); }
         }
 
         /// <summary>
@@ -124,12 +128,9 @@ namespace KaleyLab.Extension
         /// </summary>
         /// <param name="instance">Object instance</param>
         /// <param name="message">Invalid operation exception message</param>
-        public static void NullThrowInvalidOpEx(this object instance, string message)
+        public static void ThrowsInvalidOpExIfNull(this object instance, string message)
         {
-            if (instance == null)
-            {
-                throw new InvalidOperationException(message);
-            }
+            if (instance.IsNull()) { throw new InvalidOperationException(message); }
         }
 
         /// <summary>
@@ -137,12 +138,9 @@ namespace KaleyLab.Extension
         /// </summary>
         /// <param name="str">String instance</param>
         /// <param name="message">Argument exception message</param>
-        public static void NullOrEmptyThrowArgumentEx(this string str, string message)
+        public static void ThrowArgumentExIfNullOrEmpty(this string str, string message)
         {
-            if (string.IsNullOrEmpty(str))
-            {
-                throw new ArgumentException(message);
-            }
+            if (str.IsNullOrEmpty()) { throw new ArgumentException(message); }
         }
 
         /// <summary>
@@ -151,12 +149,9 @@ namespace KaleyLab.Extension
         /// <typeparam name="T">Collection instance type</typeparam>
         /// <param name="enumerable">Enumerable instance</param>
         /// <param name="message">Argument exception message</param>
-        public static void NullOrEmptyThrowArgumentEx<T>(this IEnumerable<T> enumerable, string message)
+        public static void ThrowsArgumentExIfNullOrEmpty<T>(this IEnumerable<T> enumerable, string message)
         {
-            if (enumerable.NullOrEmpty())
-            {
-                throw new ArgumentException(message);
-            }
+            if (enumerable.IsNullOrEmpty()) { throw new ArgumentException(message); }
         }
 
         /// <summary>
@@ -164,12 +159,9 @@ namespace KaleyLab.Extension
         /// </summary>
         /// <param name="guid">Guid instance</param>
         /// <param name="message">Argument exception message</param>
-        public static void EmptyThrowArgumentEx(this Guid guid,string message)
+        public static void ThrowsArgumentExIfEmpty(this Guid guid,string message)
         {
-            if (guid.Empty())
-            {
-                throw new ArgumentException(message);
-            }
+            if (guid.IsEmpty()) { throw new ArgumentException(message); }
         }
     }
 }
