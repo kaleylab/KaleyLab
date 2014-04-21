@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-
+using KaleyLab.Data.Specifications;
 
 namespace KaleyLab.Data
 {
@@ -21,31 +21,15 @@ namespace KaleyLab.Data
 
         protected abstract TEntity DoGet(object key);
 
-        protected abstract TEntity DoGet(Specifications.ISpecification<TEntity> specification);
+        protected abstract TEntity DoGet(ISpecification<TEntity> specification);
 
-        protected virtual IEnumerable<TEntity> DoAll()
-        {
-            return this.DoFindAll(new Specifications.AnySpecification<TEntity>());
-        }
+        protected abstract IEnumerable<TEntity> DoGetAll(ISpecification<TEntity> specification);
 
-        protected virtual IEnumerable<TEntity> DoAll(int pageNumber, int pageSize)
-        {
-            return this.DoFindAll(new Specifications.AnySpecification<TEntity>(), pageNumber, pageSize);
-        }
+        protected abstract IEnumerable<TEntity> DoGetAll(ISpecification<TEntity> specification, params Order<TEntity>[] orderBys);
 
-        protected abstract IEnumerable<TEntity> DoAll(System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder);
+        protected abstract PagedResult<TEntity> DoGetAll(ISpecification<TEntity> specification, int pageNumber, int pageSize, params Order<TEntity>[] orderBys);
 
-        protected abstract IEnumerable<TEntity> DoAll(System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder,int pageNumber,int pageSize);
-
-        protected abstract IEnumerable<TEntity> DoFindAll(Specifications.ISpecification<TEntity> specification);
-
-        protected abstract IEnumerable<TEntity> DoFindAll(Specifications.ISpecification<TEntity> specification, int pageNumber, int pageSize);
-
-        protected abstract IEnumerable<TEntity> DoFindAll(Specifications.ISpecification<TEntity> specification, System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder);
-
-        protected abstract IEnumerable<TEntity> DoFindAll(Specifications.ISpecification<TEntity> specification, System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder,int pageNumber,int pageSize);
-
-        protected abstract bool DoExists(Specifications.ISpecification<TEntity> specification);
+        protected abstract bool DoExists(ISpecification<TEntity> specification);
 
         protected abstract void DoAdd(TEntity entity);
 
@@ -67,52 +51,27 @@ namespace KaleyLab.Data
             return this.DoGet(key);
         }
 
-        public TEntity Get(Specifications.ISpecification<TEntity> specification)
+        public TEntity Get(ISpecification<TEntity> specification)
         {
             return this.DoGet(specification);
         }
 
-        public IEnumerable<TEntity> All()
+        public IEnumerable<TEntity> GetAll(ISpecification<TEntity> specification)
         {
-            return this.DoAll();
+            return this.DoGetAll(specification);
         }
 
-        public IEnumerable<TEntity> All(int pageNumber, int pageSize)
+        public IEnumerable<TEntity> GetAll(ISpecification<TEntity> specification, params Order<TEntity>[] orderBys)
         {
-            return this.DoAll(pageNumber, pageSize);
+            return this.DoGetAll(specification,orderBys);
         }
 
-        public IEnumerable<TEntity> All(System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder)
+        public PagedResult<TEntity> GetAll(ISpecification<TEntity> specification, int pageNumber, int pageSize, params Order<TEntity>[] orderBys)
         {
-            return this.DoAll(sortPredicate, sortOrder);
+            return this.DoGetAll(specification, pageNumber,pageSize,orderBys);
         }
 
-        public IEnumerable<TEntity> All(System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder, int pageNumber, int pageSize)
-        {
-            return this.DoAll(sortPredicate, sortOrder, pageNumber, pageSize);
-        }
-
-        public IEnumerable<TEntity> FindAll(Specifications.ISpecification<TEntity> specification, System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder)
-        {
-            return this.DoFindAll(specification, sortPredicate, sortOrder);
-        }
-
-        public IEnumerable<TEntity> FindAll(Specifications.ISpecification<TEntity> specification, System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder, int pageNumber, int pageSize)
-        {
-            return this.DoFindAll(specification, sortPredicate, sortOrder,pageNumber,pageSize);
-        }
-
-        public IEnumerable<TEntity> FindAll(Specifications.ISpecification<TEntity> specification)
-        {
-            return this.DoFindAll(specification);
-        }
-
-        public IEnumerable<TEntity> FindAll(Specifications.ISpecification<TEntity> specification, int pageNumber, int pageSize)
-        {
-            return this.DoFindAll(specification, pageNumber, pageSize);
-        }
-
-        public bool Exists(Specifications.ISpecification<TEntity> specification)
+        public bool Exists(ISpecification<TEntity> specification)
         {
             return this.DoExists(specification);
         }

@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AC48EE7F-15A0-433A-A073-7429A0B28B1D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{0060171D-9A03-4332-A068-4C384E77FFBB}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaleyLab.Data.SampleConsole</RootNamespace>
-    <AssemblyName>KaleyLab.Data.SampleConsole</AssemblyName>
+    <RootNamespace>KaleyLab.Data.EntityFrameworkSample</RootNamespace>
+    <AssemblyName>KaleyLab.Data.EntityFrameworkSample</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -46,14 +44,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Base\BaseEntity.cs" />
+    <Compile Include="Base\BaseEntityConfiguration.cs" />
+    <Compile Include="Base\BaseEntityRepository.cs" />
+    <Compile Include="EntityFameworkDbContext.cs" />
+    <Compile Include="Migrations\201404210959023_InitTables.cs" />
+    <Compile Include="Migrations\201404210959023_InitTables.Designer.cs">
+      <DependentUpon>201404210959023_InitTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ModelConfigurations\RoleConfiguration.cs" />
+    <Compile Include="ModelConfigurations\UserConfiguration.cs" />
+    <Compile Include="ModelConfigurations\UserFieldConfiguration.cs" />
+    <Compile Include="ModelConfigurations\UserRoleConfiguration.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserField.cs" />
+    <Compile Include="Models\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Base\RelationEntityConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\KaleyLab.Data.EntityFramework\KaleyLab.Data.EntityFramework.csproj">
       <Project>{eafc6f50-f744-4117-b619-361e72618c80}</Project>
@@ -63,6 +78,11 @@
       <Project>{111fe75e-8f5a-4a6a-9b40-03bdcaf74011}</Project>
       <Name>KaleyLab.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201404210959023_InitTables.resx">
+      <DependentUpon>201404210959023_InitTables.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

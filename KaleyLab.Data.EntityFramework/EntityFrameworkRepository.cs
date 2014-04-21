@@ -33,11 +33,11 @@ namespace KaleyLab.Data.EntityFramework
             get { return this.efContext; }
         }
 
-        protected abstract Expression<Func<TEntity, bool>> IsSatisfiedKey(object key);
+        protected abstract Expression<Func<TEntity, bool>> KeyPredicate(object keyValue);
 
-        protected override TEntity DoGet(object key)
+        protected override TEntity DoGet(object keyValue)
         {
-            return this.efContext.Context.Set<TEntity>().Where(IsSatisfiedKey(key)).FirstOrDefault();
+            return this.efContext.Context.Set<TEntity>().Where(KeyPredicate(keyValue)).FirstOrDefault();
         }
 
         protected override TEntity DoGet(ISpecification<TEntity> specification)
@@ -45,113 +45,98 @@ namespace KaleyLab.Data.EntityFramework
             return this.efContext.Context.Set<TEntity>().AsExpandable().Where(specification.IsSatisfiedBy()).FirstOrDefault();
         }
 
-        protected override IEnumerable<TEntity> DoAll(System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder)
+        protected override IEnumerable<TEntity> DoGetAll(ISpecification<TEntity> specification)
         {
-            var query = this.efContext.Context.Set<TEntity>().AsExpandable().Where(new AnySpecification<TEntity>().IsSatisfiedBy());
-            if (sortPredicate != null)
-            {
-                switch (sortOrder)
-                {
-                    case SortOrder.Ascending:
-                        return query.SortBy(sortPredicate);
-                    case SortOrder.Descending:
-                        return query.SortByDescending(sortPredicate);
-                    default:
-                        break;
-                }
-            }
-
-            return query;
+            return this.efContext.Context.Set<TEntity>().AsExpandable().Where(specification.IsSatisfiedBy()).OrderBy(e => 1).ToList();
         }
 
-        protected override IEnumerable<TEntity> DoAll(System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder, int pageNumber, int pageSize)
-        {
-            if (pageNumber <= 0)
-            {
-                throw new ArgumentException("page number must greater than zero.");
-            }
-
-            if (pageSize <= 0)
-            {
-                throw new ArgumentException("page size must greater than zero.");
-            }
-
-            int skip = pageSize * (pageNumber - 1),take = pageSize;
-            var query = this.efContext.Context.Set<TEntity>().AsExpandable().Where(new AnySpecification<TEntity>().IsSatisfiedBy());
-            if (sortPredicate != null)
-            {
-                switch (sortOrder)
-                {
-                    case SortOrder.Ascending:
-                        return query.SortBy(sortPredicate).Skip(skip).Take(take);
-                    case SortOrder.Descending:
-                        return query.SortByDescending(sortPredicate).Skip(skip).Take(take);
-                    default:
-                        break;
-                }
-            }
-
-            return query.Skip(skip).Take(take);
-
-        }
-
-        protected override IEnumerable<TEntity> DoFindAll(ISpecification<TEntity> specification)
-        {
-            return this.efContext.Context.Set<TEntity>().AsExpandable().Where(specification.IsSatisfiedBy());
-        }
-
-        protected override IEnumerable<TEntity> DoFindAll(ISpecification<TEntity> specification, int pageNumber, int pageSize)
-        {
-            return this.efContext.Context.Set<TEntity>().AsExpandable().Where(specification.IsSatisfiedBy()).Skip(pageSize * (pageNumber - 1)).Take(pageSize);
-        }
-
-        protected override IEnumerable<TEntity> DoFindAll(ISpecification<TEntity> specification, System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder)
+        protected override IEnumerable<TEntity> DoGetAll(ISpecification<TEntity> specification, params Order<TEntity>[] orderBys)
         {
             var query = this.efContext.Context.Set<TEntity>().AsExpandable().Where(specification.IsSatisfiedBy());
-            if (sortPredicate != null)
+            
+            if (orderBys != null && orderBys.Any())
             {
-                switch (sortOrder)
+                var sortOrder = orderBys.First();
+                if (sortOrder.Descending)
                 {
-                    case SortOrder.Ascending:
-                        return query.SortBy(sortPredicate);
-                    case SortOrder.Descending:
-                        return query.SortByDescending(sortPredicate);
-                    default:
-                        break;
+                    query = query.OrderByDescending(sortOrder);
                 }
+                else
+                {
+                    query = query.OrderBy(sortOrder);
+                }
+
+                for (int i = 1; i < orderBys.Length; i++)
+                {
+                    sortOrder = orderBys[i];
+                    if (sortOrder.Descending)
+                    {
+                        query = (query as IOrderedQueryable<TEntity>).ThenByDescending(sortOrder);
+                    }
+                    else
+                    {
+                        query = (query as IOrderedQueryable<TEntity>).ThenBy(sortOrder);
+                    }
+
+                }
+
+                return query.ToList();
             }
 
-            return query;
+            return query.OrderBy(e => 1).ToList();
         }
 
-        protected override IEnumerable<TEntity> DoFindAll(ISpecification<TEntity> specification, System.Linq.Expressions.Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder, int pageNumber, int pageSize)
+        protected override PagedResult<TEntity> DoGetAll(ISpecification<TEntity> specification, int pageNumber, int pageSize, params Order<TEntity>[] orderBys)
         {
-            if (pageNumber <= 0)
-            {
-                throw new ArgumentException("page number must greater than zero.");
-            }
-
             if (pageSize <= 0)
             {
-                throw new ArgumentException("page size must greater than zero.");
+                throw new ArgumentOutOfRangeException("pageSize", pageSize, "pageSize must  greater than or equals zero.");
+            }
+            if (pageNumber <= 0)
+            {
+                throw new ArgumentOutOfRangeException("pageNumber", pageNumber, "pageNumber must greater than or equals zero.");
             }
 
             int skip = pageSize * (pageNumber - 1), take = pageSize;
             var query = this.efContext.Context.Set<TEntity>().AsExpandable().Where(specification.IsSatisfiedBy());
-            if (sortPredicate != null)
-            {
-                switch (sortOrder)
-                {
-                    case SortOrder.Ascending:
-                        return query.SortBy(sortPredicate).Skip(skip).Take(take);
-                    case SortOrder.Descending:
-                        return query.SortByDescending(sortPredicate).Skip(skip).Take(take);
-                    default:
-                        break;
-                }
-            }
+            
+            var totalRecords = query.Count();
+            var pagedData = new List<TEntity>();
 
-            return query.Skip(skip).Take(take);
+            if (orderBys != null && orderBys.Any())
+            {
+                var sortOrder = orderBys.First();
+                if (sortOrder.Descending)
+                {
+                    query = query.OrderByDescending(sortOrder);
+                }
+                else
+                {
+                    query = query.OrderBy(sortOrder);
+                }
+
+                for (int i = 1; i < orderBys.Length; i++)
+                {
+                    sortOrder = orderBys[i];
+                    if (sortOrder.Descending)
+                    {
+                        query = (query as IOrderedQueryable<TEntity>).ThenByDescending(sortOrder);
+                    }
+                    else
+                    {
+                        query = (query as IOrderedQueryable<TEntity>).ThenBy(sortOrder);
+                    }
+
+                }
+
+                pagedData = query.Skip(skip).Take(take).ToList();
+            }
+            else
+            {
+                pagedData = query.OrderBy(e => 1).Skip(skip).Take(take).ToList();
+            }
+               
+            return new PagedResult<TEntity>(totalRecords, pageSize, pageNumber, pagedData);
         }
 
         protected override bool DoExists(ISpecification<TEntity> specification)
@@ -174,28 +159,6 @@ namespace KaleyLab.Data.EntityFramework
             this.efContext.RegisterDeleted<TEntity>(entity);
         }
 
-
-        private object[] GetKeyValues(TEntity entity)
-        {
-            List<object> keyValues = new List<object>();
-
-            if (this.efContext.Context.Entry(entity).State == System.Data.EntityState.Detached)
-            {
-                this.efContext.Context.Entry(entity).State = System.Data.EntityState.Unchanged;
-            }
-
-            var objectStateEntry = ((IObjectContextAdapter)this.efContext.Context).ObjectContext.ObjectStateManager.GetObjectStateEntry(entity);
-            foreach (var item in objectStateEntry.EntityKey.EntityKeyValues)
-            {
-                keyValues.Add(item.Value);
-            }
-
-            //Detach the current object after read the KeyValues,
-            //if not it will effect the Apply(T entity) to replace old object.
-            this.efContext.Context.Entry(entity).State = System.Data.EntityState.Detached;
-
-            return keyValues.ToArray();
-        }
 
     }
 }

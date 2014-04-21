@@ -47,11 +47,14 @@
     <Compile Include="LinqKit\ExpressionExpander.cs" />
     <Compile Include="LinqKit\ExpressionVisitor.cs" />
     <Compile Include="LinqKit\Extensions.cs" />
+    <Compile Include="Order.cs" />
+    <Compile Include="OrderExtensions.cs" />
+    <Compile Include="PagedResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="RepositoryContext.cs" />
-    <Compile Include="SortByExtension.cs" />
-    <Compile Include="SortOrder.cs" />
+    <Compile Include="RepositoryContextBuilder.cs" />
     <Compile Include="Specifications\AdHocSpecification.cs" />
     <Compile Include="Specifications\AndSpecification.cs" />
     <Compile Include="Specifications\AnySpecification.cs" />

@@ -43,6 +43,7 @@ namespace KaleyLab.Data.SampleConsole
                 orderRepository.ApplyCurrentValues(singleOrderEntity);
                 context.Commit();
 
+
             }
 
             //Console.WriteLine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ""));

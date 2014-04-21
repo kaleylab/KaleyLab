@@ -10,16 +10,11 @@ namespace KaleyLab.Data
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        TEntity Get(object key);
+        TEntity Get(object keyValue);
         TEntity Get(ISpecification<TEntity> specification);
-        IEnumerable<TEntity> All();
-        IEnumerable<TEntity> All(int pageNumber, int pageSize);
-        IEnumerable<TEntity> All(Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder);
-        IEnumerable<TEntity> All(Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder,int pageNumber,int pageSize);
-        IEnumerable<TEntity> FindAll(ISpecification<TEntity> specification);
-        IEnumerable<TEntity> FindAll(ISpecification<TEntity> specification, int pageNumber, int pageSize);
-        IEnumerable<TEntity> FindAll(ISpecification<TEntity> specification, Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder);
-        IEnumerable<TEntity> FindAll(ISpecification<TEntity> specification, Expression<Func<TEntity, dynamic>> sortPredicate, SortOrder sortOrder, int pageNumber, int pageSize);
+        IEnumerable<TEntity> GetAll(ISpecification<TEntity> specification);
+        IEnumerable<TEntity> GetAll(ISpecification<TEntity> specification, params Order<TEntity>[] orderBys);
+        PagedResult<TEntity> GetAll(ISpecification<TEntity> specification, int pageNumber, int pageSize, params Order<TEntity>[] orderBys);
         bool Exists(ISpecification<TEntity> specification);
         void Add(TEntity entity);
         void Update(TEntity entity);

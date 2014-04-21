@@ -8,7 +8,12 @@ namespace KaleyLab.Data
 {
     public abstract class RepositoryContext : DisposableObject, IRepositoryContext
     {
-        private readonly ThreadLocal<bool> localCommitted = new ThreadLocal<bool>(() => true);
+        private readonly ThreadLocal<bool> localCommitted;
+
+        public RepositoryContext()
+        {
+            this.localCommitted =  new ThreadLocal<bool>(() => true);
+        }
 
         #region IRepositoryContext
 

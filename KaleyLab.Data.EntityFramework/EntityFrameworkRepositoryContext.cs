@@ -11,7 +11,12 @@ namespace KaleyLab.Data.EntityFramework
 {
     public class EntityFrameworkRepositoryContext<TDbContext>: RepositoryContext, IEntityFrameworkRepositoryContext where TDbContext : DbContext,new()
     {
-        private readonly ThreadLocal<DbContext> localContext = new ThreadLocal<DbContext>(() => { return new TDbContext(); });
+        private readonly ThreadLocal<DbContext> localContext;
+
+        public EntityFrameworkRepositoryContext()
+        {
+            this.localContext = new ThreadLocal<DbContext>(() => { return new TDbContext(); });
+        }
 
         #region IRepositoryContext
 

@@ -16,9 +16,9 @@ namespace KaleyLab.Data.Sample
 
         }
 
-        protected override System.Linq.Expressions.Expression<Func<TEntity, bool>> IsSatisfiedKey(object key)
+        protected override System.Linq.Expressions.Expression<Func<TEntity, bool>> KeyPredicate(object keyValue)
         {
-            return e => e.Id == (Guid)key;
+            return e => e.Id == (Guid)keyValue;
         }
     }
 }
