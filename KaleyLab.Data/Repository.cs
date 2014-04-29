@@ -23,11 +23,19 @@ namespace KaleyLab.Data
 
         protected abstract TEntity DoGet(ISpecification<TEntity> specification);
 
+        protected abstract TEntity DoGet(ISpecification<TEntity> specification, params Expression<Func<TEntity, dynamic>>[] eagerLoadingProperties);
+
         protected abstract IEnumerable<TEntity> DoGetAll(ISpecification<TEntity> specification);
+
+        protected abstract IEnumerable<TEntity> DoGetAll(ISpecification<TEntity> specification, params Expression<Func<TEntity, dynamic>>[] eagerLoadingProperties);
 
         protected abstract IEnumerable<TEntity> DoGetAll(ISpecification<TEntity> specification, params Order<TEntity>[] orderBys);
 
+        protected abstract IEnumerable<TEntity> DoGetAll(ISpecification<TEntity> specification, Expression<Func<TEntity, dynamic>>[] eagerLoadingProperties, params Order<TEntity>[] orderBys);
+
         protected abstract PagedResult<TEntity> DoGetAll(ISpecification<TEntity> specification, int pageNumber, int pageSize, params Order<TEntity>[] orderBys);
+
+        protected abstract PagedResult<TEntity> DoGetAll(ISpecification<TEntity> specification, int pageNumber, int pageSize,  Expression<Func<TEntity, dynamic>>[] eagerLoadingProperties,params Order<TEntity>[] orderBys);
 
         protected abstract bool DoExists(ISpecification<TEntity> specification);
 
@@ -46,9 +54,9 @@ namespace KaleyLab.Data
             get { return this.context; }
         }
 
-        public TEntity Get(object key)
+        public TEntity Get(object keyValue)
         {
-            return this.DoGet(key);
+            return this.DoGet(keyValue);
         }
 
         public TEntity Get(ISpecification<TEntity> specification)
@@ -56,9 +64,19 @@ namespace KaleyLab.Data
             return this.DoGet(specification);
         }
 
+        public TEntity Get(ISpecification<TEntity> specification, params Expression<Func<TEntity, dynamic>>[] eagerLoadingProperties)
+        {
+           return  this.DoGet(specification, eagerLoadingProperties);
+        }
+
         public IEnumerable<TEntity> GetAll(ISpecification<TEntity> specification)
         {
             return this.DoGetAll(specification);
+        }
+
+        public IEnumerable<TEntity> GetAll(ISpecification<TEntity> specification, params Expression<Func<TEntity, dynamic>>[] eagerLoadingProperties)
+        {
+            return this.DoGetAll(specification, eagerLoadingProperties);
         }
 
         public IEnumerable<TEntity> GetAll(ISpecification<TEntity> specification, params Order<TEntity>[] orderBys)
@@ -66,9 +84,19 @@ namespace KaleyLab.Data
             return this.DoGetAll(specification,orderBys);
         }
 
+        public IEnumerable<TEntity> GetAll(ISpecification<TEntity> specification, Expression<Func<TEntity, dynamic>>[] eagerLoadingProperties, params Order<TEntity>[] orderBys)
+        {
+            return this.DoGetAll(specification, eagerLoadingProperties, orderBys);
+        }
+
         public PagedResult<TEntity> GetAll(ISpecification<TEntity> specification, int pageNumber, int pageSize, params Order<TEntity>[] orderBys)
         {
             return this.DoGetAll(specification, pageNumber,pageSize,orderBys);
+        }
+
+        public PagedResult<TEntity> GetAll(ISpecification<TEntity> specification, int pageNumber, int pageSize, Expression<Func<TEntity, dynamic>>[] eagerLoadingProperties, params Order<TEntity>[] orderBys)
+        {
+            return this.DoGetAll(specification, pageNumber, pageSize, eagerLoadingProperties, orderBys);
         }
 
         public bool Exists(ISpecification<TEntity> specification)

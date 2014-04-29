@@ -16,6 +16,9 @@ namespace KaleyLab.Data.EntityFrameworkSample.Repositories
 
         }
 
-       
+        public void Test()
+        {
+            
+        }
     }
 }
