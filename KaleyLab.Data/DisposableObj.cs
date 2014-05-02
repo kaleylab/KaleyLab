@@ -5,9 +5,9 @@ using System.Text;
 
 namespace KaleyLab.Data
 {
-    public abstract class DisposableObject : IDisposable
+    public abstract class DisposableObj : IDisposable
     {
-        ~DisposableObject()
+        ~DisposableObj()
         {
             this.Dispose(false);
         }

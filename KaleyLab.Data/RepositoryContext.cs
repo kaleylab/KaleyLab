@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace KaleyLab.Data
 {
-    public abstract class RepositoryContext : DisposableObject, IRepositoryContext
+    public abstract class RepositoryContext : DisposableObj, IRepositoryContext
     {
         private readonly ThreadLocal<bool> localCommitted;
 
