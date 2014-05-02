@@ -28,7 +28,7 @@ namespace KaleyLab.Data.EntityFramework
             }
         }
 
-        protected IEntityFrameworkRepositoryContext EfContext
+        protected IEntityFrameworkRepositoryContext EFContext
         {
             get { return this.efContext; }
         }
@@ -294,6 +294,11 @@ namespace KaleyLab.Data.EntityFramework
             }
 
             return new PagedResult<TEntity>(totalRecords, pageSize, pageNumber, pagedData);
+        }
+
+        protected virtual IEnumerable<TEntity> SqlQuery(string query, params object[] parameters)
+        {
+            return this.efContext.Context.Set<TEntity>().SqlQuery(query, parameters).ToList();
         }
 
         protected override bool DoExists(ISpecification<TEntity> specification)

@@ -36,59 +36,6 @@ namespace KaleyLab.Data
 	/// </summary>
     public sealed class SqlHelper
     {
-        #region Connection
-
-        /// <summary>
-        /// Get SqlConnection
-        /// </summary>
-        /// <param name="connectionString"></param>
-        /// <returns></returns>
-        public static SqlConnection GetConnection(string connectionString)
-        {
-            SqlConnection conn = new SqlConnection(connectionString);
-            conn.Open();
-            return conn;
-        }
-
-        /// <summary>
-        /// Close SqlConnection
-        /// </summary>
-        /// <param name="conn"></param>
-        public static void CloseConnection(SqlConnection conn)
-        {
-            if (conn != null && conn.State != ConnectionState.Closed)
-            {
-                conn.Close();
-            }
-        }
-
-        /// <summary>
-        /// Get SqlTransaction
-        /// </summary>
-        /// <param name="connectionString"></param>
-        /// <returns></returns>
-        public static SqlTransaction GetTransaction(string connectionString)
-        {
-            SqlConnection conn = new SqlConnection(connectionString);
-            conn.Open();
-            SqlTransaction tran = conn.BeginTransaction();
-            return tran;
-        }
-
-        /// <summary>
-        /// Close SqlTransaction
-        /// </summary>
-        /// <param name="tran"></param>
-        public static void CloseTransaction(SqlTransaction tran)
-        {
-            if (tran != null)
-            {
-                CloseConnection(tran.Connection);
-            }
-        }
-
-        #endregion 
-
         #region private utility methods & constructors
 
         // Since this class provides only static methods, make the default constructor private to prevent 
